@@ -29,11 +29,11 @@ public class GoogleSearch {
 		driver.get("https://www.google.com");
 	}
 
-	@When("user enters {}")  // {} represents any data type
+	@When("user enters {}") // {} represents any data type
 	public void user_enters(String string) {
-	   driver.findElement(By.name("q")).sendKeys(string);
+		driver.findElement(By.name("q")).sendKeys(string);
 	}
-	
+
 	@When("he click on search button")
 	public void he_click_on_search_button() {
 		driver.findElement(By.name("btnK")).click();
@@ -41,39 +41,60 @@ public class GoogleSearch {
 
 	@Then("user prints all the search results from first page")
 	public void user_prints_all_the_search_results_from_first_page() {
-		
+
 		List<WebElement> searchResults = driver.findElements(By.xpath("//h3"));
 		List<WebElement> ad_link = driver.findElements(By.xpath("//a[@target='_blank']"));
 
 		System.out.println("Total Advertise Links on the Page is - " + ad_link.size());
 		System.out.println("Total Search Results on the Page is - " + searchResults.size());
-		
-		for (WebElement result : searchResults) 
-		{
+
+		for (WebElement result : searchResults) {
 			System.out.println(result.getText());
 		}
-		
+
 		driver.close();
 		driver = null;
-		
+
 	}
 
-	
 	@Then("application displayes auto suggestion")
 	public void application_displayes_auto_suggestion() {
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//ul[@class='erkvQe']"))));
-		List<WebElement> suggestions = driver.findElements(By.xpath("//li[@class='sbct']//div[contains(@class,'sbl1')]"));
+		List<WebElement> suggestions = driver
+				.findElements(By.xpath("//li[@class='sbct']//div[contains(@class,'sbl1')]"));
 		System.out.println("total suggestions displayed is " + suggestions.size());
-		Assert.assertTrue(suggestions.size()>1);
+		Assert.assertTrue(suggestions.size() > 1);
 	}
 
 	@Then("user prints all the suggestions displayed")
 	public void user_prints_all_the_suggestions_displayed() {
-		List<WebElement> suggestions = driver.findElements(By.xpath("//li[@class='sbct']//div[contains(@class,'sbl1')]"));
-		for (WebElement suggestion : suggestions) 
-		{
+		List<WebElement> suggestions = driver
+				.findElements(By.xpath("//li[@class='sbct']//div[contains(@class,'sbl1')]"));
+		for (WebElement suggestion : suggestions) {
 			System.out.println(suggestion.getText());
 		}
 	}
+
+	@Then("search result will have {int} result(s)")
+	public void search_result_will_have_results(Integer int1) {
+		List<WebElement> searchResults = driver.findElements(By.xpath("//h3"));
+		System.out.println("Search result has " + searchResults.size() + " search results");
+	}
+	@Then("search result(s) will have hyperlinks/serachdetails")
+	public void search_result_will_have_serachdetails() {
+		List<WebElement> searchResults = driver.findElements(By.xpath("//h3"));
+		System.out.println("Search result has " + searchResults.size() + " search results");
+		for (WebElement result : searchResults) 
+		{
+			System.out.println(result.getText());
+		}
+	}
+	
+	@Then("search results will have \\(hyperlinks)")
+	public void search_results_will_have() {
+		List<WebElement> searchResults = driver.findElements(By.xpath("//h3"));
+		System.out.println("Search result has " + searchResults.size() + " search results");
+	}
+
 }
