@@ -1,6 +1,7 @@
 package stepdefinition;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
@@ -59,68 +60,125 @@ public class CreateCustomer {
 		System.out.println("clicking on Add New and then New Customer ");
 		driver.findElement(By.xpath("//div[div[text()='Add New']]")).click();
 		driver.findElement(By.xpath("//div[contains(text(),'New Customer')]")).click();
-		
+
 	}
 
 	@Then("customer creation page should be displayed")
 	public void customer_creation_page_should_be_displayed() {
 		System.out.println("Validating customer creation page is displayed");
-		String text_on_customer_creation_page = driver.findElement(By.id("customerLightBox_titlePlaceholder")).getText();
+		String text_on_customer_creation_page = driver.findElement(By.id("customerLightBox_titlePlaceholder"))
+				.getText();
 		Assert.assertEquals("Create New Customer", text_on_customer_creation_page);
-	
+
 	}
 
-	@When("user enter {string} and {string} and click on create customer")
+	@When("user enter {} and {} and click on create customer")
 	public void user_enter_and(String customername, String customerdesc) {
 		System.out.println("User entering customer details");
 		driver.findElement(By.id("customerLightBox_nameField")).sendKeys(customername);
 		driver.findElement(By.id("customerLightBox_descriptionField")).sendKeys(customerdesc);
 		driver.findElement(By.id("customerLightBox_commitBtn")).click();
-		
+
 	}
 
-	@Then("customer {string} should be created successfully")
+	@Then("customer {} should be created successfully")
 	public void customer_should_be_created_successfully(String customer) {
-		//div[@class='title ellipsis' and text()='customer']
-		Assert.assertTrue(driver.findElement(By.xpath("//div[@class='title ellipsis' and text()='" + customer + "']")).isDisplayed());
-	
+		// div[@class='title ellipsis' and text()='customer']
+		Assert.assertTrue(driver.findElement(By.xpath("//div[@class='title ellipsis' and text()='" + customer + "']"))
+				.isDisplayed());
+
 	}
 
 	@Then("success message should be displayed")
 	public void success_message_should_be_displayed() {
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-		WebElement toastMsg = wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+		WebElement toastMsg = wait
+				.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
 		System.out.println("Success Message " + toastMsg.getText());
-		
+
 		wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
 		System.out.println("toast message is disappeared");
 	}
 
 	@When("user enter all detals and click on create customer and success msg should be displayed")
-	public void user_enter_all_detals_and_click_on_create_customer_success_msg_should_be_displayed(DataTable dataTable) {
+	public void user_enter_all_detals_and_click_on_create_customer_success_msg_should_be_displayed(
+			DataTable dataTable) {
 		List<List<String>> data = dataTable.asLists();
-		for (int j = 0; j< data.size() ; j++) {
-				List<String> list = data.get(j);
-				String customername = data.get(j).get(0);
-				String customerdesc = data.get(j).get(1);
-				System.out.println("Inner List " + list.size());
-				driver.findElement(By.xpath("//div[div[text()='Add New']]")).click();
-				driver.findElement(By.xpath("//div[contains(text(),'New Customer')]")).click();
-				driver.findElement(By.id("customerLightBox_nameField")).sendKeys(customername);
-				driver.findElement(By.id("customerLightBox_descriptionField")).sendKeys(customerdesc);
-				driver.findElement(By.id("customerLightBox_commitBtn")).click();
-				WebDriverWait wait = new WebDriverWait(driver, 10);
-				WebElement toastMsg = wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
-				System.out.println("Success Message " + toastMsg.getText());
-				
-				wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
-				System.out.println("toast message is disappeared");
-			
-			
-		}
-		
+		for (int j = 0; j < data.size(); j++) {
+			List<String> list = data.get(j);
+			String customername = data.get(j).get(0);
+			String customerdesc = data.get(j).get(1);
+			System.out.println("Inner List " + list.size());
+			driver.findElement(By.xpath("//div[div[text()='Add New']]")).click();
+			driver.findElement(By.xpath("//div[contains(text(),'New Customer')]")).click();
+			driver.findElement(By.id("customerLightBox_nameField")).sendKeys(customername);
+			driver.findElement(By.id("customerLightBox_descriptionField")).sendKeys(customerdesc);
+			driver.findElement(By.id("customerLightBox_commitBtn")).click();
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			WebElement toastMsg = wait
+					.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+			System.out.println("Success Message " + toastMsg.getText());
 
-	
+			wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+			System.out.println("toast message is disappeared");
+
+		}
+
+	}
+
+	@When("user enter all detals from map and click on create customer and success msg should be displayed")
+	public void user_enter_all_detals_from_map_and_click_on_create_customer_success_msg_should_be_displayed(
+			DataTable dataTable) {
+
+		List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
+
+		for (int i = 0; i < data.size(); i++) {
+
+			String customername = data.get(i).get("customerName");
+			String customerdesc = data.get(i).get("customerDesc");
+			driver.findElement(By.xpath("//div[div[text()='Add New']]")).click();
+			driver.findElement(By.xpath("//div[contains(text(),'New Customer')]")).click();
+			driver.findElement(By.id("customerLightBox_nameField")).sendKeys(customername);
+			driver.findElement(By.id("customerLightBox_descriptionField")).sendKeys(customerdesc);
+			driver.findElement(By.id("customerLightBox_commitBtn")).click();
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			WebElement toastMsg = wait
+					.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+			System.out.println("Success Message " + toastMsg.getText());
+
+			wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+			System.out.println("toast message is disappeared");
+
+		}
+
+	}
+
+	@When("user enter all detals from single map and click on create customer and success msg should be displayed")
+	public void user_enter_all_detals_from_single_map_and_click_on_create_customer_success_msg_should_be_displayed(
+			DataTable dataTable) {
+
+		Map<String, String> data = dataTable.asMap(String.class, String.class);
+
+		String customername_with_delimiter = data.get("customerName");
+		String customerdesc_with_delimiter = data.get("customerDesc");
+		String[] customer_name_array = customername_with_delimiter.split(",");
+		String[] customer_desc_array = customerdesc_with_delimiter.split(",");
+		for (int i = 0; i < customer_name_array.length; i++) {
+			driver.findElement(By.xpath("//div[div[text()='Add New']]")).click();
+			driver.findElement(By.xpath("//div[contains(text(),'New Customer')]")).click();
+			driver.findElement(By.id("customerLightBox_nameField")).sendKeys(customer_name_array[i]);
+			driver.findElement(By.id("customerLightBox_descriptionField")).sendKeys(customer_desc_array[i]);
+			driver.findElement(By.id("customerLightBox_commitBtn")).click();
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			WebElement toastMsg = wait
+					.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+			System.out.println("Success Message " + toastMsg.getText());
+
+			wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+			System.out.println("toast message is disappeared");
+
+		}
+
 	}
 
 	@Then("user logout of application")
@@ -128,15 +186,3 @@ public class CreateCustomer {
 		driver.findElement(By.id("logoutLink")).click();
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
