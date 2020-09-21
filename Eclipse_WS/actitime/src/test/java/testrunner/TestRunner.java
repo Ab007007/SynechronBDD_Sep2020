@@ -6,7 +6,7 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-		features = "src/test/java/features/createCustomer.feature",
+		features = "src/test/java/features/createMultipleCustomer.feature",
 		glue = {"stepdefinition"},  //  OR src/test/java/stepdefinition
 		monochrome = true,
 		dryRun = false,

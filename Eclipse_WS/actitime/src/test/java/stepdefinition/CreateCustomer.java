@@ -1,5 +1,6 @@
 package stepdefinition;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
@@ -10,6 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -94,16 +96,31 @@ public class CreateCustomer {
 		System.out.println("toast message is disappeared");
 	}
 
-	@When("user enter all detals and click on create customer success msg should be displayed")
-	public void user_enter_all_detals_and_click_on_create_customer_success_msg_should_be_displayed(io.cucumber.datatable.DataTable dataTable) {
-	    // Write code here that turns the phrase above into concrete actions
-	    // For automatic transformation, change DataTable to one of
-	    // E, List<E>, List<List<E>>, List<Map<K,V>>, Map<K,V> or
-	    // Map<K, List<V>>. E,K,V must be a String, Integer, Float,
-	    // Double, Byte, Short, Long, BigInteger or BigDecimal.
-	    //
-	    // For other transformations you can register a DataTableType.
-	    throw new io.cucumber.java.PendingException();
+	@When("user enter all detals and click on create customer and success msg should be displayed")
+	public void user_enter_all_detals_and_click_on_create_customer_success_msg_should_be_displayed(DataTable dataTable) {
+		List<List<String>> data = dataTable.asLists();
+		for (int j = 0; j< data.size() ; j++) {
+				List<String> list = data.get(j);
+				String customername = data.get(j).get(0);
+				String customerdesc = data.get(j).get(1);
+				System.out.println("Inner List " + list.size());
+				driver.findElement(By.xpath("//div[div[text()='Add New']]")).click();
+				driver.findElement(By.xpath("//div[contains(text(),'New Customer')]")).click();
+				driver.findElement(By.id("customerLightBox_nameField")).sendKeys(customername);
+				driver.findElement(By.id("customerLightBox_descriptionField")).sendKeys(customerdesc);
+				driver.findElement(By.id("customerLightBox_commitBtn")).click();
+				WebDriverWait wait = new WebDriverWait(driver, 10);
+				WebElement toastMsg = wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+				System.out.println("Success Message " + toastMsg.getText());
+				
+				wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+				System.out.println("toast message is disappeared");
+			
+			
+		}
+		
+
+	
 	}
 
 	@Then("user logout of application")
@@ -111,3 +128,15 @@ public class CreateCustomer {
 		driver.findElement(By.id("logoutLink")).click();
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
