@@ -4,7 +4,7 @@ Feature: Google Search
     Given user is on app page
       | http://www.google.co.in |
       | http://www.amazon.com   |
-      | http://www.google.com   |
+      | https://www.google.com/?gws_rd=ssl   |
 
   @googleSearch @regression
   Scenario: User prints all search results

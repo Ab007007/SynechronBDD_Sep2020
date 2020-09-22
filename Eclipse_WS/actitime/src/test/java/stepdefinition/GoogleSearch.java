@@ -11,6 +11,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -20,6 +21,20 @@ public class GoogleSearch {
 
 	WebDriver driver = null;
 
+	@Given("user is on app page")
+	public void user_is_on_app_page(DataTable dataTable) {
+	
+		List<List<String>> urls = dataTable.asLists();
+		WebDriverManager.chromedriver().setup();
+		driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().window().maximize();
+		for(int i=0; i < urls.size() ; i ++) {
+			String url = urls.get(i).get(0);
+			driver.get(url);
+			
+		}
+	}
 	@Given("user is on Google page")
 	public void user_is_on_google_page() {
 		WebDriverManager.chromedriver().setup();
@@ -65,6 +80,8 @@ public class GoogleSearch {
 				.findElements(By.xpath("//li[@class='sbct']//div[contains(@class,'sbl1')]"));
 		System.out.println("total suggestions displayed is " + suggestions.size());
 		Assert.assertTrue(suggestions.size() > 1);
+		driver.close();
+		driver = null;
 	}
 
 	@Then("user prints all the suggestions displayed")

@@ -1,5 +1,6 @@
 Feature: Google Search
-
+# this feature has hooks implemented which will take care of printing
+# welcome message before and after execution
   Background: 
     Given user is on Google page
 

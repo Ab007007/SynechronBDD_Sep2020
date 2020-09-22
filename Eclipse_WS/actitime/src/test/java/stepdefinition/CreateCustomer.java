@@ -9,10 +9,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -21,6 +24,33 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class CreateCustomer {
 
 	WebDriver driver = null;
+
+	@Before("@actitime or @end2end and not (@google or @formy)")
+	public void login_and_goto_task_page() {
+		WebDriverManager.chromedriver().setup();
+		driver = new ChromeDriver();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+		driver.manage().window().maximize();
+		driver.get("http://localhost/login.do");
+		driver.findElement(By.id("username")).sendKeys("admin");
+		driver.findElement(By.name("pwd")).sendKeys("manager");
+		driver.findElement(By.id("loginButton")).click();
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Assert.assertEquals("actiTIME - Enter Time-Track", driver.getTitle());
+		driver.findElement(By.xpath("//div[text()='TASKS']/parent::a")).click();
+		System.out.println("validate user is on Task page");
+		Assert.assertEquals("actiTIME - Task List", driver.getTitle());
+	}
+
+	@After("@actitime or @end2end")
+	public void log_out() {
+		driver.findElement(By.id("logoutLink")).click();
+	}
 
 	@Given("user is loggedin to the actitime application using {string} and {string}")
 	public void user_is_loggedin_to_the_actitime_application(String un, String pwd) {
@@ -39,6 +69,7 @@ public class CreateCustomer {
 			e.printStackTrace();
 		}
 		Assert.assertEquals("actiTIME - Enter Time-Track", driver.getTitle());
+
 	}
 
 	@When("user clicks on task tab")
@@ -184,5 +215,58 @@ public class CreateCustomer {
 	@Then("user logout of application")
 	public void user_logout_of_application() {
 		driver.findElement(By.id("logoutLink")).click();
+		driver.close();
+		driver = null;
 	}
+
+	// ---------------- delete customer step definitions ---------------------------
+	@When("user search for a customer {}")
+	public void user_search_for_a_customer(String string) {
+		driver.findElement(
+				By.xpath("//div[@class='customersProjectsPanel']//input[@placeholder='Start typing name ...']"))
+				.sendKeys(string);
+	}
+
+	@When("user moves the cursor to setting icon displayed next to {} and click on it")
+	public void user_moves_the_cursor_to_setting_icon_displayed_next_to_customer_and_click_on_it(String customerName) {
+		Actions act = new Actions(driver);
+		act.moveToElement(driver.findElement(By.xpath(
+				"//div[@class='itemsContainer']//div[@class='title' and contains(text(),'" + customerName + "')]")))
+				.perform();
+		act.click(driver.findElement(By.xpath("//div[@class='itemsContainer']//div[@class='title' and contains(text(),'"
+				+ customerName + "')]/following-sibling::div"))).perform();
+	}
+
+	@Then("customer action page should be displayed")
+	public void customer_action_page_should_be_displayed() {
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Assert.assertTrue(
+				driver.findElement(By.xpath("//div[input[@placeholder='Enter Customer Name']]/preceding-sibling::div"))
+						.isDisplayed());
+	}
+
+	@Then("click on Action and delete permanently")
+	public void click_on_action_and_delete_permanently() {
+		driver.findElement(By.xpath("//div[@class='customerNamePlaceHolder']/following-sibling::div")).click();
+		driver.findElement(By.xpath(
+				"//div[div[@class='customerNamePlaceHolder']]/following-sibling::div[@class='dropdownContainer actionsMenu']//div[text()='Delete']"))
+				.click();
+		driver.findElement(By.id("customerPanel_deleteConfirm_submitTitle")).click();
+
+	}
+
+	@Then("customer deletion success message should be displayed")
+	public void customer_deletion_success_message_should_be_displayed() {
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		WebElement ele = wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+		System.out.println("Success Message " + ele.getText());
+		wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.xpath("//div[@class='toast']"))));
+	}
+
+	
 }
