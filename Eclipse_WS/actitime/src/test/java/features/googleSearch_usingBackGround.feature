@@ -1,4 +1,4 @@
-Feature: Google Search
+Feature: Google Search with BachGround
 # this feature has hooks implemented which will take care of printing
 # welcome message before and after execution
   Background: 

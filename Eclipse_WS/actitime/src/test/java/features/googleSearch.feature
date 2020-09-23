@@ -1,4 +1,4 @@
-Feature: Google Search
+Feature: Google Search using Scenario
 
   @googleSearch @regression
   Scenario: User prints all search results

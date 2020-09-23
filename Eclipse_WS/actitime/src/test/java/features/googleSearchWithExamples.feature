@@ -12,6 +12,7 @@ Feature: Google Search With Examples
       | Wipro       |
       | IBM         |
 
+	@googleSearch
   Scenario Outline: User prints all autosuggestions
     Given user is on Google page
     When user enters <companyname>
