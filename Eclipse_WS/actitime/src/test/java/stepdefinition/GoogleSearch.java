@@ -23,18 +23,19 @@ public class GoogleSearch {
 
 	@Given("user is on app page")
 	public void user_is_on_app_page(DataTable dataTable) {
-	
+
 		List<List<String>> urls = dataTable.asLists();
 		WebDriverManager.chromedriver().setup();
 		driver = new ChromeDriver();
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 		driver.manage().window().maximize();
-		for(int i=0; i < urls.size() ; i ++) {
+		for (int i = 0; i < urls.size(); i++) {
 			String url = urls.get(i).get(0);
 			driver.get(url);
-			
+
 		}
 	}
+
 	@Given("user is on Google page")
 	public void user_is_on_google_page() {
 		WebDriverManager.chromedriver().setup();
@@ -80,8 +81,7 @@ public class GoogleSearch {
 				.findElements(By.xpath("//li[@class='sbct']//div[contains(@class,'sbl1')]"));
 		System.out.println("total suggestions displayed is " + suggestions.size());
 		Assert.assertTrue(suggestions.size() > 1);
-		driver.close();
-		driver = null;
+
 	}
 
 	@Then("user prints all the suggestions displayed")
@@ -91,6 +91,8 @@ public class GoogleSearch {
 		for (WebElement suggestion : suggestions) {
 			System.out.println(suggestion.getText());
 		}
+		driver.close();
+		driver = null;
 	}
 
 	@Then("search result will have {int} result(s)")
@@ -98,16 +100,16 @@ public class GoogleSearch {
 		List<WebElement> searchResults = driver.findElements(By.xpath("//h3"));
 		System.out.println("Search result has " + searchResults.size() + " search results");
 	}
+
 	@Then("search result(s) will have hyperlinks/serachdetails")
 	public void search_result_will_have_serachdetails() {
 		List<WebElement> searchResults = driver.findElements(By.xpath("//h3"));
 		System.out.println("Search result has " + searchResults.size() + " search results");
-		for (WebElement result : searchResults) 
-		{
+		for (WebElement result : searchResults) {
 			System.out.println(result.getText());
 		}
 	}
-	
+
 	@Then("search results will have \\(hyperlinks)")
 	public void search_results_will_have() {
 		List<WebElement> searchResults = driver.findElements(By.xpath("//h3"));

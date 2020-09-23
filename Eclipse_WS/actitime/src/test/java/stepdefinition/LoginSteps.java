@@ -27,8 +27,8 @@ public class LoginSteps {
 
 	}
 
-	@When("user enters valid username and password")
-	public void user_enters_valid_username_and_password() {
+	@When("user enter valid username and password")
+	public void user_enter_valid_username_and_password() {
 		System.out.println(" Entering valid username and password ");
 		driver.findElement(By.id("username")).sendKeys("admin");
 		driver.findElement(By.name("pwd")).sendKeys("manager");

@@ -6,11 +6,11 @@ import io.cucumber.junit.CucumberOptions;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-		features = "src/test/java/features/deleteCustomer.feature",
+		features = "src/test/java/features/",
 		glue = {"stepdefinition"},  //  OR src/test/java/stepdefinition
 		monochrome = true,
 		dryRun = false,
-		tags = "@deletecustomer",
+		tags = "@googleSearch",
 		plugin = {"pretty","html:target/html-report/cucumber-html-reports.html", "junit:target/JunitReports/report.xml",
 				 "json:target/JsonReports/report.json"})
 public class TestRunner {
