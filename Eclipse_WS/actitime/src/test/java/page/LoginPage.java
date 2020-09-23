@@ -3,6 +3,7 @@ package page;
 import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -21,12 +22,15 @@ public class LoginPage
 	}
 	
 	@FindBy(id = "username")
+	@CacheLookup
 	WebElement usernameTextbox;
 	
 	@FindBy(name = "pwd")
+	@CacheLookup
 	WebElement passwordTextbox;
 	
 	@FindBy(id = "loginButton")
+	@CacheLookup
 	WebElement loginButton;
 	
 	public void validateLoginPageisLaunch() {
